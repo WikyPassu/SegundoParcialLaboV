@@ -1,6 +1,7 @@
 package com.example.splabov;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 
@@ -11,15 +12,20 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
-public class MainActivity extends AppCompatActivity implements Handler.Callback, SearchView.OnQueryTextListener {
+public class MainActivity extends AppCompatActivity implements Handler.Callback, SearchView.OnQueryTextListener, AdapterView.OnItemSelectedListener {
 
     Handler handler;
     TextView tvUsuarios;
@@ -27,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
     SharedPreferences.Editor editor;
     View view;
     JSONArray jsonUsuarios;
+    static String selectedRol;
+    static Integer lastId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +52,14 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
             }
             else{
                 this.jsonUsuarios = new JSONArray(this.pref.getString("jsonArray", null));
+                JSONObject usuario = new JSONObject(this.jsonUsuarios.get(this.jsonUsuarios.length()-1).toString());
+                lastId = usuario.getInt("id");
                 this.tvUsuarios.setText(this.jsonUsuarios.toString());
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        this.selectedRol = "";
     }
 
     @Override
@@ -64,6 +75,10 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.agregar){
             Log.d("Click", "Agregar");
+            AlertDialog dialog = this.crearDialog();
+            dialog.show();
+            ListenerDialog ld = new ListenerDialog(this, this.view, dialog, this.pref, this.editor);
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(ld);
         }
         else if(item.getItemId() == R.id.buscar){
             Log.d("Click", "Buscar");
@@ -73,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 
     @Override
     public boolean onQueryTextSubmit(String s) {
-        Log.d("Click", "Buscar");
+        Log.d("Click", "Buscar"+lastId);
         return false;
     }
 
@@ -89,7 +104,39 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
         this.editor.putString("jsonArray", this.jsonUsuarios.toString());
         this.editor.commit();
         tvUsuarios.setText(this.jsonUsuarios.toString());
+        try {
+            JSONObject usuario = new JSONObject(this.jsonUsuarios.get(this.jsonUsuarios.length()-1).toString());
+            lastId = usuario.getInt("id");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         Log.d("Callback", "Llegaron datos!!!");
         return false;
+    }
+
+    public AlertDialog crearDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Crear Usuario");
+        this.view = LayoutInflater.from(this).inflate(R.layout.agregar, null);
+        builder.setView(this.view);
+        Spinner spRol = this.view.findViewById(R.id.spRol);
+        ArrayAdapter<CharSequence> adapterRol = ArrayAdapter.createFromResource(this,
+                R.array.rol, android.R.layout.simple_spinner_item);
+        adapterRol.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spRol.setAdapter(adapterRol);
+        spRol.setOnItemSelectedListener(this);
+        builder.setNeutralButton("Cerrar", null);
+        builder.setPositiveButton("Guardar", null);
+        return builder.create();
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        this.selectedRol = adapterView.getItemAtPosition(i).toString();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 }

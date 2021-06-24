@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">SPLaboV</string>
+    <string-array name="rol">
+        <item>Supervisor</item>
+        <item>Construction Manager</item>
+        <item>Project Manager</item>
+    </string-array>
 </resources>
