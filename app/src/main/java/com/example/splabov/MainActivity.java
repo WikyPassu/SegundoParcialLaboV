@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        this.selectedRol = adapterView.getItemAtPosition(i).toString();
+        selectedRol = adapterView.getItemAtPosition(i).toString();
     }
 
     @Override
