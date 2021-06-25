@@ -36,7 +36,6 @@ public class ConexionHTTP {
             else{
                 throw new RuntimeException("Error en la conexion con el servidor: " + respuesta);
             }
-
         } catch (MalformedURLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
