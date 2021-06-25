@@ -114,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 
     @Override
     public boolean handleMessage(@NonNull Message message) {
-        this.tvUsuarios = super.findViewById(R.id.tvUsuarios);
         this.jsonUsuarios = (JSONArray) message.obj;
         this.editor.putString("jsonArray", this.jsonUsuarios.toString());
         this.editor.commit();
