@@ -43,7 +43,7 @@ public class ListenerDialog implements View.OnClickListener {
             try {
                 int id = MainActivity.lastId + 1;
                 MainActivity.lastId = id;
-                String stringUsuario = "{'id':"+id+",'username':'"+this.etNombre.getText().toString()+"','rol':'"+MainActivity.selectedRol+"','admin':'"+this.tbAdmin.isChecked()+"'}";
+                String stringUsuario = "{'id':"+id+",'username':'"+this.etNombre.getText().toString()+"','rol':'"+MainActivity.selectedRol+"','admin':"+this.tbAdmin.isChecked()+"}";
                 JSONObject usuario = new JSONObject(stringUsuario);
                 JSONArray jsonUsuarios = new JSONArray(this.pref.getString("jsonArray", null));
                 jsonUsuarios.put(usuario);
