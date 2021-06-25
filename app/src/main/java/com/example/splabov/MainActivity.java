@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        this.selectedRol = "";
+        selectedRol = "";
     }
 
     @Override
@@ -79,9 +79,6 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
             dialog.show();
             ListenerDialog ld = new ListenerDialog(this, this.view, dialog, this.pref, this.editor);
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(ld);
-        }
-        else if(item.getItemId() == R.id.buscar){
-            Log.d("Click", "Buscar");
         }
         return super.onOptionsItemSelected(item);
     }
