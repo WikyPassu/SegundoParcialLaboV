@@ -88,7 +88,25 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 
     @Override
     public boolean onQueryTextSubmit(String s) {
-        Log.d("Click", "Buscar"+lastId);
+        try {
+            String rol = "";
+            this.jsonUsuarios = new JSONArray(this.pref.getString("jsonArray", null));
+            for(int i=0; i<this.jsonUsuarios.length(); i++){
+                JSONObject usuario = this.jsonUsuarios.getJSONObject(i);
+                if(s.equals(usuario.getString("username"))) {
+                    rol = usuario.getString("rol");
+                    break;
+                }
+            }
+            if(!"".equals(rol)){
+                this.lanzarAlertDialog("Usuario encontrado", "El rol del usuario es "+rol);
+            }
+            else{
+                this.lanzarAlertDialog("Usuario no encontrado", "El usuario "+s+" no esta dentro de la lista");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
@@ -136,7 +154,14 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
+    public void onNothingSelected(AdapterView<?> adapterView) {}
 
+    public void lanzarAlertDialog(String titulo, String mensaje){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(titulo);
+        builder.setMessage(mensaje);
+        builder.setPositiveButton("Cerrar", null);
+        builder.create();
+        builder.show();
     }
 }
