@@ -22,8 +22,7 @@ public class HiloConexion extends Thread {
             byte[] dataJson = conexionHTTP.obtenerRespuesta(this.url);
             String s = new String(dataJson);
             Message msg = new Message();
-            JSONArray jsonArray = new JSONArray(s);
-            msg.obj = jsonArray;
+            msg.obj = new JSONArray(s);
             this.handler.sendMessage(msg);
         } catch(Exception e){
             e.printStackTrace();
